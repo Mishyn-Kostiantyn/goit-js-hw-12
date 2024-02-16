@@ -32,7 +32,7 @@ body {
 .input-form {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   justify-content: center;
 }
 .input-form input {
@@ -58,6 +58,24 @@ input:hover {
   border: 1px solid #000;
   outline: none;
 }
+#iternal-scroll {
+  width: 24px;
+  height: 24px;
+}
+.check-box-text {
+  color: #0a622d;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.64px;
+}
+.check-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 button {
   border-radius: 8px;
   height: 40px;
@@ -79,9 +97,17 @@ button {
 button:hover {
   background: #6c8cff;
 }
+.loadMore-button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.loadMore-button:disabled {
+  background: #7a7c82;
+}
 .loader {
-  width: 48px;
-  height: 48px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: inline-block;
   border-top: 4px solid #fff;
@@ -95,8 +121,8 @@ button:hover {
   position: absolute;
   left: 0;
   top: 0;
-  width: 48px;
-  height: 48px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border-left: 4px solid #ff3d00;
   border-bottom: 4px solid transparent;
@@ -183,6 +209,22 @@ button:hover {
   display: flex;
   justify-content: center;
   margin-top: 60px;
+}
+
+.rectangle {
+  display: block;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 150px;
+  height: 150px;
+  background-color: transparent;
+}
+.search-options {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
 }
 .hide {
   display: none;

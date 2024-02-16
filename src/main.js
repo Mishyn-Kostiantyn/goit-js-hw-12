@@ -1,3 +1,4 @@
+'use strict';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
@@ -6,17 +7,58 @@ import getImageGallery from "./js/pixabay-api";
 import renderImageGallery from "./js/render-function";
 import { numberOfImagesPerPage } from "./js/pixabay-api";
 export const ref = {
-    formForInputSearchingParametersForImages: document.querySelector('.input-form'),
-    containerForLoaderSign: document.querySelector('.loader-container'),
+    searchingForm: document.querySelector('.input-form'),
+    loaderSign: document.querySelector('.loader-container'),
     formForImagesGallery: document.querySelector('.gallery'),
     loadMoreButton: document.querySelector('.loadMore-button'),
-    loaderForLoadMoreOperation: document.querySelector('.loadMore'),
-    };
+    loadMoreButtonTextContent: document.querySelector('.lmbutton-text-content'),
+    loaderLoadMore: document.querySelector('.loadMore'),
+    observeTarget: document.querySelector('.js-target'),
+    scrollLoader: document.querySelector('.loadMorescroll'),
+    iternalScrollOption: document.querySelector('input[name="iternal-scroll"]'),
+};
+    
 let totalNumberOfPages = 0;
 let pageNumber = 1;
 let searchingTheme = '';
+const lMTextContent = { initial: 'Load more', onLoad: 'Loading images' };
+let options = {
+  root: document.querySelector("#scrollArea"),
+  rootMargin: "0px",
+  threshold: 1.0,
+};
+async function onLoadMore() {
+    const data = await getImageGallery(searchingTheme,pageNumber);
+    totalNumberOfPages = Math.ceil(data.total / numberOfImagesPerPage);
+    ref.scrollLoader.classList.add('hide');
+    renderImageGallery(data.hits);
+    lightbox.refresh();
+}
+let callback = (entries, observer) => {
+    entries.forEach
+        (entry => {
+            if (entry.isIntersecting) {
+                pageNumber = pageNumber + 1;
+                ref.scrollLoader.classList.remove('hide');
+                onLoadMore();
+                ref.imagesGalleryItem = document.querySelector('.gallery-item');
+                let h = 3 * Math.ceil(ref.imagesGalleryItem.getBoundingClientRect().height);
+                window.scrollBy({
+                    top: h,
+                    behavior: 'smooth',
+                });
+                if ( pageNumber>=totalNumberOfPages) {
+                    observer.unobserve(ref.observeTarget);
+                    ref.observeTarget.classList.add('hide');
+                    showinfoMessage();
+                    }
+                 }
+        })
+};
+const observer = new IntersectionObserver(callback, options);
 
-ref.formForInputSearchingParametersForImages.addEventListener('submit', onFormSubmit);
+
+ref.searchingForm.addEventListener('submit', onFormSubmit);
 ref.loadMoreButton.addEventListener('click', onLoadMoreButtonClick);
 
 function showWarningMessage() {
@@ -57,62 +99,81 @@ function showErrorMessage(error) {
 
 async function onFormSubmit(event) {
     event.preventDefault();
+    let onIternalScroll = ref.iternalScrollOption.checked ? true : false;
     totalNumberOfPages = 0;
     pageNumber = 1;
-    console.log('Page number on Submit:', pageNumber);
+    observer.unobserve(ref.observeTarget);
+    if (!ref.observeTarget.classList.contains('hide')) { ref.observeTarget.classList.add('hide'); };
     if (!ref.loadMoreButton.classList.contains('hide')) { ref.loadMoreButton.classList.add('hide'); };
-  deleteImageGalleryMarkup();
-    ref.containerForLoaderSign.classList.remove('hide');
-        ref.loadMoreButton.classList.add('hide');
-     searchingTheme= event.target.elements.query.value;
-    if (searchingTheme.trim() !== '') {
+    deleteImageGalleryMarkup();
+    ref.loaderSign.classList.remove('hide');
+    ref.loadMoreButton.classList.add('hide');
+    searchingTheme= event.target.elements.query.value;
+    if (searchingTheme.trim() !== '')
+       {
         const data = await getImageGallery(searchingTheme,pageNumber);
-         if (data.hits == 0) {
-        ref.containerForLoaderSign.classList.add('hide');
-        showWarningMessage();
-      }
-      else {
-        ref.containerForLoaderSign.classList.add('hide');
-          renderImageGallery(data.hits);
-          lightbox.refresh();
-             totalNumberOfPages = Math.ceil(data.total / numberOfImagesPerPage);
-             console.log('total number of page:', totalNumberOfPages);
-             if (totalNumberOfPages > 1) { ref.loadMoreButton.classList.remove('hide'); }
-        
-      } 
-    ref.formForInputSearchingParametersForImages.reset()
-    }
-    else {
-    ref.containerForLoaderSign.classList.add('hide');
+        if (data.hits == 0)
+          {
+          ref.loaderSign.classList.add('hide');
+          showWarningMessage();
+         }
+        else
+        {
+        ref.loaderSign.classList.add('hide');
+        renderImageGallery(data.hits);
+        lightbox.refresh();
+        totalNumberOfPages = Math.ceil(data.total / numberOfImagesPerPage);
+         if (totalNumberOfPages > 1)
+          {
+             if (onIternalScroll) {
+                 ref.observeTarget.classList.remove('hide');
+                 observer.observe(ref.observeTarget);
+             }
+             else
+             {
+                 ref.loadMoreButton.classList.remove('hide');
+             }
+          }
+        } 
+        ref.searchingForm.reset()
+       }
+    else
+    {
+    ref.loaderSign.classList.add('hide');
     showWarningMessageForEmptyInput();
-  }
+    }
 };
 
-async function onLoadMoreButtonClick() {
+async function onLoadMoreButtonClick()
+{
     pageNumber = pageNumber + 1;
-    ref.loadMoreButton.classList.add('hide');
-    ref.loaderForLoadMoreOperation.classList.remove('hide');
+    ref.loaderLoadMore.classList.remove('hide');
+    ref.loadMoreButton.setAttribute('disabled', "true");
+    ref.loadMoreButtonTextContent.textContent = lMTextContent.onLoad;
     const data = await getImageGallery(searchingTheme,pageNumber);
     totalNumberOfPages = Math.ceil(data.total / numberOfImagesPerPage);
-    ref.loaderForLoadMoreOperation.classList.add('hide');
+    ref.loaderLoadMore.classList.add('hide');
     renderImageGallery(data.hits);
     lightbox.refresh();
     ref.imagesGalleryItem = document.querySelector('.gallery-item');
     let h = 3*Math.ceil(ref.imagesGalleryItem.getBoundingClientRect().height);
-    console.log(h);
-    window.scrollBy({
+    window.scrollBy
+        ({
         top: h,
         behavior: 'smooth',
-    });
-    if (totalNumberOfPages > pageNumber) {
-        ref.loadMoreButton.classList.remove('hide');
-        
-    } else {
+        });
+    console.log(totalNumberOfPages);
+    console.log(pageNumber);
+    if (totalNumberOfPages > pageNumber)
+    {
+        ref.loadMoreButton.removeAttribute('disabled');
+        ref.loadMoreButtonTextContent.textContent=lMTextContent.initial;
+    }
+    else
+    {
         ref.loadMoreButton.classList.add('hide');
         showinfoMessage();
     }
-    
-    
 }
 
 let lightbox = new SimpleLightbox('.gallery a',
