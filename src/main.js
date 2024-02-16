@@ -171,6 +171,8 @@ async function onLoadMoreButtonClick()
     }
     else
     {
+        ref.loadMoreButton.removeAttribute('disabled');
+        ref.loadMoreButtonTextContent.textContent=lMTextContent.initial;
         ref.loadMoreButton.classList.add('hide');
         showinfoMessage();
     }
