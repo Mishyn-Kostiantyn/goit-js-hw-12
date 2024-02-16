@@ -58,18 +58,46 @@ input:hover {
   border: 1px solid #000;
   outline: none;
 }
-#iternal-scroll {
-  width: 24px;
-  height: 24px;
+.scroll-status {
+  appearance: none;
+  visibility: hidden;
+  margin: 0px;
 }
+.custom-checkbox-ext {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: 1px solid #797979;
+}
+.custom-checkbox-int {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  background-color: transparent;
+}
+.scroll-status:checked + .check-box-text .custom-checkbox-int {
+  background-color: #0a622d;
+  border: none;
+}
+.scroll-status:checked + .check-box-text .custom-checkbox-ext {
+  border-color: #0a622d;
+}
+
 .check-box-text {
-  color: #0a622d;
+  color: #797979;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px; /* 150% */
   letter-spacing: 0.64px;
+}
+.scroll-status:checked + .check-box-text {
+  color: #0a622d;
+  scale: 1.1;
 }
 .check-box {
   display: flex;
