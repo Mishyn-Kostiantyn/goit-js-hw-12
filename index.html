@@ -15,28 +15,48 @@
     <script type="module" crossorigin src="/goit-js-hw-12/commonHelpers.js"></script>
     <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-db5ad915.js">
     <link rel="stylesheet" href="/goit-js-hw-12/assets/vendor-cf6910df.css">
-    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-f9fbc435.css">
+    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-d3874865.css">
   </head>
   <body>
-    <form class="input-form">
-      <input
-        type="text"
-        id="search-images"
-        name="query"
-        placeholder="Search images..."
-        autocomplete="off"
-      />
-      <button class="submit-button" type="submit" data-start>Search</button>
-    </form>
+    <div class="search-options">
+      <div class="check-box">
+        <input
+          type="checkbox"
+          class="scroll-status"
+          name="iternal-scroll"
+          id="iternal-scroll"
+        />
+        <label class="check-box-text" for="iternal-scroll"
+          >Iternal scroll</label
+        >
+      </div>
+      <form class="input-form">
+        <input
+          type="text"
+          id="search-images"
+          name="query"
+          placeholder="Search images..."
+          autocomplete="off"
+        />
+        <button class="submit-button" type="submit" data-start>Search</button>
+      </form>
+    </div>
+
     <div class="loader-container hide">
       <span class="loader"></span>
     </div>
+
     <ul class="gallery"></ul>
+
+    <div class="js-target rectangle hide">
+      <span class="loadMorescroll loader hide"></span>
+    </div>
+
     <div class="loadMore-container">
       <button class="loadMore-button hide" type="button" data-start>
-        Load more
+        <span class="loadMore loader hide"></span>
+        <span class="lmbutton-text-content">Load more</span>
       </button>
-      <span class="loadMore loader hide"></span>
     </div>
     
   </body>
