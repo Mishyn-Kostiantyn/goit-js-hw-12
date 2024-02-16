@@ -21,6 +21,7 @@ export const ref = {
 let totalNumberOfPages = 0;
 let pageNumber = 1;
 let searchingTheme = '';
+let onSubmit = false;
 const lMTextContent = { initial: 'Load more', onLoad: 'Loading images' };
 let options = {
   root: document.querySelector("#scrollArea"),
@@ -60,6 +61,7 @@ const observer = new IntersectionObserver(callback, options);
 
 ref.searchingForm.addEventListener('submit', onFormSubmit);
 ref.loadMoreButton.addEventListener('click', onLoadMoreButtonClick);
+ref.iternalScrollOption.addEventListener('change', onIternalScrollChange);
 
 function showWarningMessage() {
     iziToast.warning({
@@ -96,9 +98,26 @@ function showErrorMessage(error) {
       position: 'topCenter',
     });
 }
-
+function onIternalScrollChange() {
+    if (onSubmit)
+    {
+        if (ref.iternalScrollOption.checked)
+        {
+            ref.loadMoreButton.classList.add('hide')
+            ref.observeTarget.classList.remove('hide');
+            observer.observe(ref.observeTarget);
+            
+        } else {
+             observer.unobserve(ref.observeTarget);
+             ref.observeTarget.classList.add('hide');
+            ref.loadMoreButton.classList.remove('hide');
+        }
+    }
+    else { return; }
+}
 async function onFormSubmit(event) {
     event.preventDefault();
+    onSubmit = true;
     let onIternalScroll = ref.iternalScrollOption.checked ? true : false;
     totalNumberOfPages = 0;
     pageNumber = 1;
